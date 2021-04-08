@@ -24,11 +24,38 @@ export default class App extends React.Component {
     this.setState({tasks: newTasksList, maxId: newId});
   }
 
+  handleDelete = (taskIdToDelete) => {
+    const tasksCopy = [...this.state.tasks];
+    const newList = tasksCopy.filter((task) => task.id !== taskIdToDelete);
+
+    this.setState({tasks: newList});
+  }
+
+  handleCompleteToggle = (taskIdForCompleteToggle) => {
+    const tasksCopy = [...this.state.tasks];
+    const tasksToCompleteToggle = tasksCopy.filter((task) => task.id === taskIdForCompleteToggle);
+    if(tasksToCompleteToggle.length > 0) {
+      const task = tasksToCompleteToggle[0];
+      
+      if(task.completed) {
+        task.completed = false;
+      }else {
+        task.completed = true;
+      }
+      // task.completed = !task.completed;
+
+      this.setState({tasks: tasksCopy});
+    }
+  }
+
   render() {
     return (
     <div>
       <NewTask onAdd={this.handleTaskAdd} />
-      {this.state.tasks.map((taskItem) => <Task key={taskItem.id} task={taskItem} />)}
+      {this.state.tasks.map((taskItem) => 
+              <Task key={taskItem.id} task={taskItem} 
+                    onDelete={this.handleDelete} 
+                    onCompleteToggle={this.handleCompleteToggle} />)}
     </div>
   )};
 }
