@@ -1,24 +1,24 @@
 import React from 'react';
-import { filters } from './Consts';
+import { Link } from 'react-router-dom';
+import { filters, routes } from './Consts';
 
-export default function Filter({currentFilter, onFilterChanged}) {
+export default function Filter({currentFilter}) {
     const getStyle = (forFilter) => {
         const stilBtn = {backgroundColor: 'green'};
         return currentFilter === forFilter ? stilBtn : {};
     }
 
-    const changeFilter = (newFilter) => {
-        onFilterChanged(newFilter);
-    }
-
     return (<p>
-        <button style={getStyle(filters.ALL)} 
-                onClick={() => changeFilter(filters.ALL)}>All</button>
+        <Link to={routes.ALL}>
+            <button style={getStyle(filters.ALL)}>All</button>
+        </Link>
+        
+        <Link to={routes.COMPLETED}>
+            <button style={getStyle(filters.COMPLETED)} >Completed</button> 
+        </Link>
 
-        <button style={getStyle(filters.COMPLETED)} 
-                onClick={() => changeFilter(filters.COMPLETED)}>Completed</button> 
-
-        <button style={getStyle(filters.NOT_COMPLETED)} 
-                onClick={() => changeFilter(filters.NOT_COMPLETED)}>Not completed</button>
+        <Link to={routes.NOT_COMPLETED}>
+            <button style={getStyle(filters.NOT_COMPLETED)} >Not completed</button>
+        </Link>
       </p>);
 }
