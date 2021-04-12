@@ -1,6 +1,8 @@
 import React from 'react';
 import Task from './Task';
 import NewTask from './NewTask';
+import Filter from './Filter';
+import { filters } from './Consts';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -11,7 +13,8 @@ export default class App extends React.Component {
         {id: 1, text: 'operi suđe', completed: false},
         {id: 2, text: 'odmori', completed: false}
       ],
-      maxId: 2
+      maxId: 2,
+      filter: filters.ALL
     };
   }
 
@@ -48,11 +51,29 @@ export default class App extends React.Component {
     }
   }
 
+  setFilter = (filterToSet) => {
+    this.setState({filter: filterToSet});
+  }
+
+  getMeFilteredOnes = () => {
+    switch(this.state.filter){
+      case filters.COMPLETED:
+        return this.state.tasks.filter(t => t.completed === true);
+      case filters.NOT_COMPLETED:
+        return this.state.tasks.filter(t => t.completed === false);
+      default:
+        return this.state.tasks;
+    }
+  }
+
   render() {
+    const filteredTasks = this.getMeFilteredOnes();
+
     return (
     <div>
-      <NewTask onAdd={this.handleTaskAdd} />
-      {this.state.tasks.map((taskItem) => 
+      <Filter currentFilter={this.state.filter} onFilterChanged={this.setFilter} />
+      <NewTask onAdd={this.handleTaskAdd}  minLength={5} />
+      {filteredTasks.map((taskItem) => 
               <Task key={taskItem.id} task={taskItem} 
                     onDelete={this.handleDelete} 
                     onCompleteToggle={this.handleCompleteToggle} />)}

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class NewTask extends React.Component {
     constructor(props) {
@@ -17,7 +18,12 @@ export default class NewTask extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
         
-        this.props.onAdd(this.state.inputText);
+        const trimano = this.state.inputText.trim();
+        if(trimano.length < this.props.minLength) {
+            return;
+        }
+
+        this.props.onAdd(trimano);
         this.setState({inputText: ''});
     }
 
@@ -28,4 +34,13 @@ export default class NewTask extends React.Component {
             <input type="submit" value='Add task' />
         </form>);
     }
+}
+
+NewTask.propTypes = {
+    minLength: PropTypes.number,
+    onAdd: PropTypes.func
+}
+
+NewTask.defaultProps = {
+    minLength: 3
 }
